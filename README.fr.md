@@ -43,6 +43,22 @@ qui manque à macOS autour.
 
 ## Installation
 
+### Télécharger
+
+**[⬇︎ Télécharger Fenestra.zip](https://github.com/theopqrs/fenestra/releases/latest/download/Fenestra.zip)** —
+macOS 14 Sonoma ou plus récent, Apple Silicon ou Intel.
+
+1. Dézippe-le et glisse **Fenestra** dans **Applications**.
+2. Ouvre-la. macOS indique qu'il n'a pas pu vérifier l'app : clique sur **Terminé**.
+3. Dans **Réglages Système › Confidentialité et sécurité**, clique sur **Ouvrir quand même** à côté de
+   *« Fenestra » a été bloqué…* et confirme.
+
+Fenestra est gratuite et open source, mais pas notarisée par Apple (il faut un compte développeur payant),
+d'où cette confirmation unique. Dans le Terminal, les étapes 2 et 3 se remplacent par
+`xattr -dr com.apple.quarantine /Applications/Fenestra.app`.
+
+### Compiler soi-même
+
 Prérequis : **macOS 14 Sonoma ou plus récent** (développée sur macOS 26 / 27) et Xcode ou les Command Line
 Tools (Swift 5.10+).
 
@@ -54,6 +70,8 @@ cd fenestra
 
 `build.sh` compile, crée `Fenestra.app`, la signe avec ton certificat Apple Development si tu en as un (sinon
 en ad hoc), la copie dans `/Applications` et la lance. Sans `--install`, l'app reste dans `build/`.
+
+### Autorisations
 
 Fenestra vit dans la barre des menus (pas d'icône dans le Dock). Au premier lancement, autorise-la dans
 **Réglages Système › Confidentialité et sécurité** :
@@ -131,7 +149,8 @@ Chaque fonction se désactive depuis l'icône de la barre des menus, qui rappell
 ## Développement
 
 La structure du code et les modes de débogage (`--list`, `--tabs`, `--tiling-test`, `--demo-screenshot`)
-sont décrits dans le [README anglais](README.md#development).
+sont décrits dans le [README anglais](README.md#development). Pour publier une version :
+`./release.sh 1.1.0` compile une app universelle, la zippe et crée la Release GitHub.
 
 ## Remerciements
 

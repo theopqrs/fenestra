@@ -1,13 +1,17 @@
 #!/bin/bash
 # Builds Fenestra.app into ./build. With --install, copies it to /Applications and launches it.
+#   UNIVERSAL=1          builds for Apple silicon and Intel (used by release.sh)
+#   CODESIGN_IDENTITY=-  signs ad hoc instead of with your certificate
 set -euo pipefail
 cd "$(dirname "$0")"
 
 APP_NAME="Fenestra"
 APP="build/$APP_NAME.app"
 
-swift build -c release
-BIN_DIR="$(swift build -c release --show-bin-path)"
+ARCHS=""
+if [ "${UNIVERSAL:-}" = 1 ]; then ARCHS="--arch arm64 --arch x86_64"; fi
+swift build -c release $ARCHS
+BIN_DIR="$(swift build -c release $ARCHS --show-bin-path)"
 
 if [ ! -f Resources/AppIcon.icns ]; then
   rm -rf build/AppIcon.iconset
@@ -24,7 +28,7 @@ cp Resources/AppIcon.icns "$APP/Contents/Resources/"
 # A real signing identity keeps the Accessibility / Screen Recording permissions across rebuilds.
 # Ad-hoc signing works too, but macOS then asks for the permissions again after every build.
 IDENTITY="${CODESIGN_IDENTITY:-$(security find-identity -v -p codesigning | awk -F'"' '/Apple Development|Developer ID Application/ { print $2; exit }')}"
-if [ -n "$IDENTITY" ] && codesign --force --timestamp=none --sign "$IDENTITY" "$APP" 2>/dev/null; then
+if [ -n "$IDENTITY" ] && [ "$IDENTITY" != "-" ] && codesign --force --timestamp=none --sign "$IDENTITY" "$APP" 2>/dev/null; then
   echo "Signé avec : $IDENTITY"
 else
   codesign --force --sign - "$APP"

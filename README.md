@@ -43,6 +43,22 @@ macOS is missing around it.
 
 ## Install
 
+### Download
+
+**[⬇︎ Download Fenestra.zip](https://github.com/theopqrs/fenestra/releases/latest/download/Fenestra.zip)** —
+macOS 14 Sonoma or later, Apple silicon or Intel.
+
+1. Unzip it and drag **Fenestra** into **Applications**.
+2. Open it. macOS says it could not verify the app: click **Done**.
+3. In **System Settings › Privacy & Security**, click **Open Anyway** next to *“Fenestra” was blocked…*
+   and confirm.
+
+Fenestra is free and open source but not notarized by Apple (that takes a paid developer account),
+hence this one-time confirmation. In the Terminal, steps 2 and 3 can be replaced by
+`xattr -dr com.apple.quarantine /Applications/Fenestra.app`.
+
+### Build from source
+
 Requirements: **macOS 14 Sonoma or later** (developed on macOS 26 / 27) and Xcode or the Command Line
 Tools (Swift 5.10+).
 
@@ -55,6 +71,8 @@ cd fenestra
 `build.sh` compiles a release build, wraps it in `Fenestra.app`, signs it with your Apple Development
 certificate when you have one (ad hoc otherwise), copies it to `/Applications` and launches it.
 Without `--install`, the app is left in `build/`.
+
+### Permissions
 
 Fenestra lives in the menu bar (no Dock icon). On first launch, allow it in
 **System Settings › Privacy & Security**:
@@ -157,6 +175,9 @@ open -n -W /Applications/Fenestra.app --stdout /tmp/fenestra.txt --args --tabs  
 open -n -W /Applications/Fenestra.app --stdout /tmp/fenestra.txt --args --tiling-test
 open -n -W /Applications/Fenestra.app --args --demo-screenshot docs/switcher.png  # README screenshots
 ```
+
+Publishing a version: `./release.sh 1.1.0` builds a universal app, zips it and creates the GitHub release
+(install notes from [`docs/install.md`](docs/install.md)).
 
 ## Credits
 
